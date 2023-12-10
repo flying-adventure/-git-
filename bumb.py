@@ -34,6 +34,9 @@ while running:
         
         if not heart:
             running = False
+        
+        if scroe == 30:
+            running = False
 
         #폭탄 화면 출력
 
