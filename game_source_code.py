@@ -19,6 +19,7 @@ game_over = font.render("game over !", True, (0, 0, 0))  # 게임 종료시 문�
 
 # 게임 배경화면
 background = pygame.image.load('image/back_ground.jpg')  # 배경화면 사진 로드
+ending_image = pygame.image.load('image/user_Lose.png')
 
 # 게임 화면 생성 및 설정
 GameDisplay = pygame.display.set_mode((600, 800))
@@ -167,6 +168,7 @@ while True:
         final_scores = font.render("Your Score: " + str(SCORE), True, (0,0,0))
         GameDisplay.blit(final_scores, (100, 200))
         GameDisplay.blit(game_over, (100, 400))
+        GameDisplay.blit(ending_image, (200, 500))
  
         
         time.sleep(1)
