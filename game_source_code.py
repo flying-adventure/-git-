@@ -32,7 +32,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # 적 사진 불러오기
-        self.image = pygame.image.load('boom2.png')
+        self.image = pygame.image.load('bomb_Base.jpg')
         # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
         # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
@@ -48,7 +48,7 @@ class Enemy(pygame.sprite.Sprite):
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
         self.rect.move_ip(0, SPEED)  # x,y좌표 설정
         # 이미지가 화면 끝에 있으면(플레이어가 물체를 피하면) 다시 이미지 위치 세팅 + 1점 추가
-        if self.rect.bottom > 440:
+        if self.rect.bottom > 750:
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(30, 610), 0)
@@ -59,28 +59,28 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # 플레이어 사진 불러오기
-        self.image = pygame.image.load('./image_user/user_Base.jpg')
+        self.image = pygame.image.load('user_Base.jpg')
         # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
         # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
         self.rect = self.rect.inflate(-20,-20)
         print("Player : ",self.rect)
         # 이미지 시작 위치 설정
-        self.rect.center = (540, 390)
+        self.rect.center = (540, 700)
 
     # 플레이어 키보드움직임 설정 함수
     def move(self):
         prssdKeys = pygame.key.get_pressed()
-        # 왼쪽 방향키를 누르면 5만큼 왼쪽 이동
+        # 왼쪽 방향키를 누르면 6만큼 왼쪽 이동
         if self.rect.left > 0:
             if prssdKeys[K_LEFT]:
-                self.rect.move_ip(-5, 0)
+                self.rect.move_ip(-6, 0)
                 position_p = self.rect.center
                 return position_p # 이 부분은 왜 필요한 건지 모르겠지만 일단 지우지 않았음. (추후에 필요할까봐)
-        # 오른쪽을 누르면 5만큼 오른쪽으로 이동
-        if self.rect.right < 640:
+        # 오른쪽을 누르면 6만큼 오른쪽으로 이동
+        if self.rect.right < 740:
             if prssdKeys[K_RIGHT]:
-                self.rect.move_ip(5, 0)
+                self.rect.move_ip(6, 0)
                 position_p = self.rect.center
                 return position_p # 이 부분은 왜 필요한 건지 모르겠지만 일단 지우지 않았음. (추후에 필요할까봐)
 
@@ -122,7 +122,7 @@ while True:
     # 배경화면 이미지 삽입
     GameDisplay.blit(background, (0, 0))
     # 하단부에 위치할 스코어 점수(적을 피할때마다 +1점 증가)
-    scores = small_font.render("Score: " + str(SCORE), True, BLACK)
+    scores = small_font.render("Score: " + str(SCORE), True, (0,0,0))
     GameDisplay.blit(scores, (5, 100))
 
     # group1 = '<Player Sprite(in 1 groups)>'
