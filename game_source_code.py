@@ -18,7 +18,7 @@ small_font = pygame.font.SysFont('Malgun Gothic', 20)  # 작은 사이즈 폰트
 game_over = font.render("game over !", True, (0, 0, 0))  # 게임 종료시 문구
 
 # 게임 배경화면
-background = pygame.image.load('back_ground.jpg')  # 배경화면 사진 로드
+background = pygame.image.load('image/back_ground.jpg')  # 배경화면 사진 로드
 
 # 게임 화면 생성 및 설정
 GameDisplay = pygame.display.set_mode((600, 800))
@@ -32,7 +32,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # 적 사진 불러오기
-        self.image = pygame.image.load('bomb_Base.jpg')
+        self.image = pygame.image.load('image/bomb_Base.png')
         # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
         # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # 플레이어 사진 불러오기
-        self.image = pygame.image.load('user_Base.jpg')
+        self.image = pygame.image.load('image/user_Base.png')
         # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
         # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
@@ -105,7 +105,7 @@ increaseSpeed = pygame.USEREVENT + 1
 pygame.time.set_timer(increaseSpeed, 2000)
 
 # 게임 BGM 설정
-bgm = pygame.mixer.Sound('background_sound.mp3')
+bgm = pygame.mixer.Sound('Sound/background_sound.mp3')
 bgm.play()
 
 ## 게임 루프 설정 ##
@@ -145,12 +145,12 @@ while True:
         # 물체 이미지 변경(충돌후 변경되는 이미지)
         # 플레이어
         GameDisplay.blit(background, (0, 0))
-        image0 = pygame.image.load('user_Warning.jpg')
+        image0 = pygame.image.load('image/user_Warning.png')
         image0.get_rect()
         GameDisplay.blit(image0, player_pos)
 
         # 폭탄
-        image1 = pygame.image.load('bomb_Warning.jpg')
+        image1 = pygame.image.load('image/bomb_Warning.png')
         image1.get_rect()
         GameDisplay.blit(image1, enemy_pos)
         pygame.display.update()
@@ -158,11 +158,11 @@ while True:
         # 배경음악 멈춤
         bgm.stop()
         # 적과 충돌시 효과음 추가
-        pygame.mixer.Sound('boom.mp3').play()
+        pygame.mixer.Sound('Sound/boom.mp3').play()
         time.sleep(0.5)
         # 게임오버화면 설정
-        pygame.mixer.Sound('boom.mp3').play()
-        GameDisplay.fill(WHITE)
+        pygame.mixer.Sound('Sound/boom.mp3').play()
+        GameDisplay.fill((255,255,255))
         final_scores = font.render("Your Score: " + str(SCORE), True, BLACK)
         GameDisplay.blit(final_scores, (100, 300))
         GameDisplay.blit(game_over, (200, 400))
