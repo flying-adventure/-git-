@@ -41,14 +41,14 @@ class Enemy(pygame.sprite.Sprite):
         # 이미지 시작 위치 설정
         self.rect.center = (random.randint(40, 600), 0)
 
-    # 적의 움직임 설정 함수+ 플레이어 점수 측정
+    # 적의 움직임 설정 함수 + 플레이어 점수 측정
     def move(self):
         global SCORE
 
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
         self.rect.move_ip(0, SPEED)  # x,y좌표 설정
         # 이미지가 화면 끝에 있으면(플레이어가 물체를 피하면) 다시 이미지 위치 세팅 + 1점 추가
-        if self.rect.bottom+50 > 750:
+        if self.rect.bottom + 50 > 750:
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(30, 610), 0)
@@ -165,9 +165,22 @@ while True:
         pygame.mixer.Sound('Sound/boom.mp3').play()
         GameDisplay.fill((255,255,255))
         final_scores = font.render("Your Score: " + str(SCORE), True, (0,0,0))
-        GameDisplay.blit(final_scores, (100, 300))
-        GameDisplay.blit(game_over, (200, 400))
+        GameDisplay.blit(final_scores, (100, 200))
+        GameDisplay.blit(game_over, (100, 400))
+ 
+        
         time.sleep(1)
+        pygame.display.update()
+        time.sleep(5)
+        pygame.quit()
+        sys.exit()
+        
+# End the game if Plyer score more than 10 points
+    if SCORE > 10:
+        GameDisplay.fill((255, 255, 255))
+        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
+        special_image_rect = special_image.get_rect(center=(300, 400))
+        GameDisplay.blit(special_image, special_image_rect)
         pygame.display.update()
         time.sleep(5)
         pygame.quit()
