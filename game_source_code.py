@@ -48,7 +48,7 @@ class Enemy(pygame.sprite.Sprite):
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
         self.rect.move_ip(0, SPEED)  # x,y좌표 설정
         # 이미지가 화면 끝에 있으면(플레이어가 물체를 피하면) 다시 이미지 위치 세팅 + 1점 추가
-        if self.rect.bottom > 750:
+        if self.rect.bottom+50 > 750:
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(30, 610), 0)
@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
                 position_p = self.rect.center
                 return position_p # 이 부분은 왜 필요한 건지 모르겠지만 일단 지우지 않았음. (추후에 필요할까봐)
         # 오른쪽을 누르면 6만큼 오른쪽으로 이동
-        if self.rect.right < 740:
+        if self.rect.right < 600:
             if prssdKeys[K_RIGHT]:
                 self.rect.move_ip(6, 0)
                 position_p = self.rect.center
@@ -160,10 +160,11 @@ while True:
         # 적과 충돌시 효과음 추가
         pygame.mixer.Sound('Sound/boom.mp3').play()
         time.sleep(0.5)
+        
         # 게임오버화면 설정
         pygame.mixer.Sound('Sound/boom.mp3').play()
         GameDisplay.fill((255,255,255))
-        final_scores = font.render("Your Score: " + str(SCORE), True, BLACK)
+        final_scores = font.render("Your Score: " + str(SCORE), True, (0,0,0))
         GameDisplay.blit(final_scores, (100, 300))
         GameDisplay.blit(game_over, (200, 400))
         time.sleep(1)
