@@ -3,6 +3,7 @@ from pygame.locals import *
 import random, time
 import os
 import cv2
+import numpy as np
 
 ##open CV를 사용하여 user 이미지를 받아 얼굴부분만 크롭하기
 face_cascade = cv2.CascadeClassifier('../haarcascade_frontalface_default.xml')
@@ -25,8 +26,40 @@ else:
    
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    
+    
+##얼굴 크롭 사진과 캐릭터 이미지 병합하기
+
+# 이미지 파일 로드
+user_base_image = cv2.imread("image/user_Base.png")
+user_lose_image = cv2.imread("image/user_Lose.png")
+user_warning_image = cv2.imread("image/user_Warning.png")
+user_win_image = cv2.imread("image/user_Win.png")
+
+cropped_image = cv2.imread("image/cropped_by_OpenCV.png")
+
+# 이미지 크기에 맞게 이미지 resize
+cropped_image = cv2.resize(cropped_image, (user_base_image.shape[1], user_base_image.shape[0]))
+user_lose_image = cv2.resize(user_lose_image, (user_base_image.shape[1], user_base_image.shape[0]))
+user_warning_image = cv2.resize(user_warning_image, (user_base_image.shape[1], user_base_image.shape[0]))
+user_win_image = cv2.resize(user_win_image, (user_base_image.shape[1], user_base_image.shape[0]))
+
+# 두 이미지를 합치기
+result = cv2.addWeighted(user_base_image, 0.4, cropped_image, 0.7, 0.5)
+output_path = "image/combined_user_Base.png"
+cv2.imwrite(output_path, result)
+result_lose = cv2.addWeighted(cropped_image, 0.4, user_lose_image, 0.7, 0.5)
+output_path_lose = "image/combined_user_Lose.png"
+cv2.imwrite(output_path_lose, result_lose)
+result_warning = cv2.addWeighted(cropped_image, 0.4, user_warning_image, 0.7, 0.5)
+output_path_warning = "image/combined_user_Warning.png"
+cv2.imwrite(output_path_warning, result_warning)
+result_win = cv2.addWeighted(cropped_image, 0.4, user_win_image, 0.7, 0.5)
+output_path_win = "image/combined_user_Win.png"
+cv2.imwrite(output_path_win, result_win)
 
 
+##game function
 
 pygame.init()
 # 초당 프레임 설정
@@ -46,7 +79,7 @@ game_over = font.render("game over !", True, (0, 0, 0))  # 게임 종료시 문�
 
 # 게임 배경화면
 background = pygame.image.load('image/back_ground.jpg')  # 배경화면 사진 로드
-ending_image = pygame.image.load('image/user_Lose.png')
+ending_image = pygame.image.load('image/combined_user_Lose.png')
 
 # 게임 화면 생성 및 설정
 GameDisplay = pygame.display.set_mode((600, 800))
@@ -106,33 +139,17 @@ class Player(pygame.sprite.Sprite):
     # 플레이어 이미지 로딩 및 설정 함수
     def __init__(self):
         super().__init__()
-        thumbnail_image = pygame.image.load("image/cropped_by_OpenCV.png")
-        user_base_image = pygame.image.load('image/user_Base.png')
-
-        # Resize the images
-        thumbnail_size = (150, 150)
-        user_base_size = (150, 150)
-        thumbnail_image = pygame.transform.scale(thumbnail_image, thumbnail_size)
-        user_base_image = pygame.transform.scale(user_base_image, user_base_size)
-
-        # Set the initial image to thumbnail_image
-        self.image = thumbnail_image
-
-        # Get the rect of the image
+        # 플레이어 사진 불러오기
+        self.image = pygame.image.load('image/combined_user_Base.png')
+        # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
-
-        # Resize the rect for collision detection
-        self.rect = self.rect.inflate(-20, -20)
-
-        # Set the initial position
+        # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
+        self.rect = self.rect.inflate(-20,-20)
+        print("Player : ",self.rect)
+        # 이미지 시작 위치 설정
         self.rect.center = (540, 700)
-
-        # Store both images as attributes for later use
-        self.thumbnail_image = thumbnail_image
-        self.user_base_image = user_base_image
-
-        # Add a flag to switch between images
-        self.use_thumbnail = True
+        
+        
     # 플레이어 키보드움직임 설정 함수
     def move(self):
         prssdKeys = pygame.key.get_pressed()
@@ -210,7 +227,7 @@ while True:
         # 물체 이미지 변경(충돌후 변경되는 이미지)
         # 플레이어
         GameDisplay.blit(background, (0, 0))
-        image0 = pygame.image.load('image/user_Warning.png')
+        image0 = pygame.image.load('image/combined_user_Warning.png')
         image0.get_rect()
         GameDisplay.blit(image0, player_pos)
 
@@ -247,8 +264,8 @@ while True:
 
     if SCORE > 15:
         GameDisplay.fill((255, 255, 255))
-        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
-        special_image_rect = special_image.get_rect(center=(350, 400))
+        special_image = pygame.image.load('image/combined_user_Win.png') # 승리 배경 이미지 
+        special_image_rect = special_image.get_rect(center=(350, 500))
         font_size = 50
         font = pygame.font.Font(None, font_size)
 
