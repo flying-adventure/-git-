@@ -84,7 +84,7 @@ ending_image = pygame.image.load('image/combined_user_Lose.png')
 # 게임 화면 생성 및 설정
 GameDisplay = pygame.display.set_mode((600, 800))
 GameDisplay.fill((255, 153, 153))
-pygame.display.set_caption("폭탄 무당이 피하기")
+pygame.display.set_caption("무당이가 폭탄이라면?")
 
 
 class Enemy(pygame.sprite.Sprite):
