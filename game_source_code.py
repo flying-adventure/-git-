@@ -1,6 +1,33 @@
 import pygame, sys
 from pygame.locals import *
 import random, time
+import os
+import cv2
+
+##open CV를 사용하여 user 이미지 얼굴만 크롭하기
+face_cascade = cv2.CascadeClassifier('../haarcascade_frontalface_default.xml')
+eye_casecade = cv2.CascadeClassifier('../haarcascade_eye.xml')
+
+img = cv2.imread("image/person.jpg")
+if img is None:
+    print("Can't read image file.")
+else:
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.3,5)
+
+
+    for (x,y,w,h) in faces:
+        cropped = img[y - int(h / 4):y + h + int(h / 4), x - int(w / 4):x + w + int(w / 4)]
+        output_path = os.path.join("image", "cropped_by_OpenCV.png")
+        cv2.imwrite(output_path, cropped)
+      
+
+   
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+
 
 
 pygame.init()
@@ -81,16 +108,33 @@ class Player(pygame.sprite.Sprite):
     # 플레이어 이미지 로딩 및 설정 함수
     def __init__(self):
         super().__init__()
-        # 플레이어 사진 불러오기
-        self.image = pygame.image.load('image/user_Base.png')
-        # 이미지 크기의 직사각형 모양 불러오기
+        thumbnail_image = pygame.image.load("image/crobbed by OpenCV.png")
+        user_base_image = pygame.image.load('image/user_Base.png')
+
+        # Resize the images
+        thumbnail_size = (150, 150)
+        user_base_size = (150, 150)
+        thumbnail_image = pygame.transform.scale(thumbnail_image, thumbnail_size)
+        user_base_image = pygame.transform.scale(user_base_image, user_base_size)
+
+        # Set the initial image to thumbnail_image
+        self.image = thumbnail_image
+
+        # Get the rect of the image
         self.rect = self.image.get_rect()
-        # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
-        self.rect = self.rect.inflate(-20,-20)
-        print("Player : ",self.rect)
-        # 이미지 시작 위치 설정
+
+        # Resize the rect for collision detection
+        self.rect = self.rect.inflate(-20, -20)
+
+        # Set the initial position
         self.rect.center = (540, 700)
 
+        # Store both images as attributes for later use
+        self.thumbnail_image = thumbnail_image
+        self.user_base_image = user_base_image
+
+        # Add a flag to switch between images
+        self.use_thumbnail = True
     # 플레이어 키보드움직임 설정 함수
     def move(self):
         prssdKeys = pygame.key.get_pressed()
