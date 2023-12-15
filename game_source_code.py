@@ -28,8 +28,6 @@ else:
 
 
 
-
-
 pygame.init()
 # 초당 프레임 설정
 FPS = 60
@@ -80,7 +78,7 @@ class Enemy(pygame.sprite.Sprite):
 
     # 적의 움직임 설정 함수 + 플레이어 점수 측정
     def move(self):
-        global SCORE
+        global SCORE, SPEED, level
 
 
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
@@ -108,7 +106,7 @@ class Player(pygame.sprite.Sprite):
     # 플레이어 이미지 로딩 및 설정 함수
     def __init__(self):
         super().__init__()
-        thumbnail_image = pygame.image.load("image/crobbed by OpenCV.png")
+        thumbnail_image = pygame.image.load("image/cropped_by_OpenCV.png")
         user_base_image = pygame.image.load('image/user_Base.png')
 
         # Resize the images
@@ -143,13 +141,13 @@ class Player(pygame.sprite.Sprite):
             if prssdKeys[K_LEFT]:
                 self.rect.move_ip(-6, 0)
                 position_p = self.rect.center
-                return position_p # 이 부분은 왜 필요한 건지 모르겠지만 일단 지우지 않았음. (추후에 필요할까봐)
+                return position_p
         # 오른쪽을 누르면 6만큼 오른쪽으로 이동
         if self.rect.right < 600:
             if prssdKeys[K_RIGHT]:
                 self.rect.move_ip(6, 0)
                 position_p = self.rect.center
-                return position_p # 이 부분은 왜 필요한 건지 모르겠지만 일단 지우지 않았음. (추후에 필요할까봐)
+                return position_p
 
 ###### 게임 설정 ########
 # 플레이어 및 적 개체 생성
@@ -245,11 +243,12 @@ while True:
         
 # End the game if Plyer score more than 15 points
 
+    
+
     if SCORE > 15:
         GameDisplay.fill((255, 255, 255))
         special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
         special_image_rect = special_image.get_rect(center=(350, 400))
-
         font_size = 50
         font = pygame.font.Font(None, font_size)
 
@@ -260,13 +259,12 @@ while True:
         GameDisplay.blit(final_B, (130, 254))
         GameDisplay.blit(final_C, (130, 308))
 
-    if SCORE > 10:
-        GameDisplay.fill((255, 255, 255))
-        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
-        special_image_rect = special_image.get_rect(center=(300, 400))
-
         GameDisplay.blit(special_image, special_image_rect)
+        
+        
         pygame.display.update()
+          # 배경음악 멈춤
+        bgm.stop()
         time.sleep(5)
         pygame.quit()
         sys.exit()
