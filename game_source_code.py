@@ -4,7 +4,7 @@ import random, time
 import os
 import cv2
 
-##open CV를 사용하여 user 이미지 얼굴만 크롭하기
+##open CV를 사용하여 user 이미지를 받아 얼굴부분만 크롭하기
 face_cascade = cv2.CascadeClassifier('../haarcascade_frontalface_default.xml')
 eye_casecade = cv2.CascadeClassifier('../haarcascade_eye.xml')
 
