@@ -11,8 +11,6 @@ FramePerSec = pygame.time.Clock()
 # 게임 진행에 필요한 변수들 설정
 SPEED = 5  # 게임 진행 속도
 SCORE = 0  # 플레이어 점수
-level = 1 # 플레이어 레벨
-
 
 # 폰트 설정
 font = pygame.font.SysFont('Tahoma', 60)  # 기본 폰트 및 사이즈 설정(폰트1)
@@ -20,8 +18,7 @@ small_font = pygame.font.SysFont('Malgun Gothic', 20)  # 작은 사이즈 폰트
 game_over = font.render("game over !", True, (0, 0, 0))  # 게임 종료시 문구
 
 # 게임 배경화면
-background = pygame.image.load('image/back_ground.jpg')  # 배경화면 사진 로드
-ending_image = pygame.image.load('image/user_Lose.png')
+background = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\back_ground.jpg')  # 배경화면 사진 로드
 
 # 게임 화면 생성 및 설정
 GameDisplay = pygame.display.set_mode((600, 800))
@@ -35,61 +32,74 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # 적 사진 불러오기
-        self.image = pygame.image.load('image/bomb_Base.png')
+        self.image = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\bomb_Base.png')
+
         # 이미지 크기의 직사각형 모양 불러오기
         self.rect = self.image.get_rect()
         # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
         self.rect = self.rect.inflate(-20,-20)
         print("Bomb : ", self.rect)
         # 이미지 시작 위치 설정
-
-        self.rect.center = 40, 300
-
-    # 적의 움직임 설정 함수 + 플레이어 점수 측정
-    def move(self):
-        global SCORE, SPEED, level
-
         self.rect.center = (random.randint(40, 600), 0)
 
     # 적의 움직임 설정 함수 + 플레이어 점수 측정
     def move(self):
         global SCORE
 
-
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
         self.rect.move_ip(0, SPEED)  # x,y좌표 설정
         # 이미지가 화면 끝에 있으면(플레이어가 물체를 피하면) 다시 이미지 위치 세팅 + 1점 추가
-
-        if self.rect.bottom + 50 > 800:
-            SCORE += 1
-            self.rect.top = 0
-            self.rect.center = random.randint(30, 500),0
-
-            # 레벨에 따라 속도 증가
-            if SCORE % 6 == 0:  # 예시로 10점 단위로 레벨이 올라가도록 설정
-                level += 0.5
-                SPEED += level  # 레벨에 따라 속도 증가
-
         if self.rect.bottom + 50 > 750:
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(30, 610), 0)
-
         return self.rect.center
 
 class Player(pygame.sprite.Sprite):
     # 플레이어 이미지 로딩 및 설정 함수
     def __init__(self):
         super().__init__()
-        # 플레이어 사진 불러오기
-        self.image = pygame.image.load('image/user_Base.png')
-        # 이미지 크기의 직사각형 모양 불러오기
+        thumbnail_image = pygame.image.load("C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\thumbnail0.png")
+        user_base_image = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\user_Base.png')
+
+        # Resize the images
+        thumbnail_size = (150, 150)
+        user_base_size = (150, 150)
+        thumbnail_image = pygame.transform.scale(thumbnail_image, thumbnail_size)
+        user_base_image = pygame.transform.scale(user_base_image, user_base_size)
+
+        # Set the initial image to thumbnail_image
+        self.image = thumbnail_image
+
+        # Get the rect of the image
         self.rect = self.image.get_rect()
-        # rec 크기 축소(충돌판정 이미지에 맞추기 위함)
-        self.rect = self.rect.inflate(-20,-20)
-        print("Player : ",self.rect)
-        # 이미지 시작 위치 설정
+
+        # Resize the rect for collision detection
+        self.rect = self.rect.inflate(-20, -20)
+
+        # Set the initial position
         self.rect.center = (540, 700)
+
+        # Store both images as attributes for later use
+        self.thumbnail_image = thumbnail_image
+        self.user_base_image = user_base_image
+
+        # Add a flag to switch between images
+        self.use_thumbnail = True
+
+    def switch_image(self):
+        # Toggle between thumbnail and user_base images
+        if self.use_thumbnail:
+            self.image = self.user_base_image
+        else:
+            self.image = self.thumbnail_image
+
+        # Toggle the flag
+        self.use_thumbnail = not self.use_thumbnail
+
+    def update(self):
+        # You can add any update logic here if needed
+        pass
 
     # 플레이어 키보드움직임 설정 함수
     def move(self):
@@ -128,7 +138,7 @@ increaseSpeed = pygame.USEREVENT + 1
 pygame.time.set_timer(increaseSpeed, 2000)
 
 # 게임 BGM 설정
-bgm = pygame.mixer.Sound('Sound/background_sound.mp3')
+bgm = pygame.mixer.Sound('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\Sound\\background_sound.mp3')
 bgm.play()
 
 ## 게임 루프 설정 ##
@@ -157,8 +167,21 @@ while True:
         i.move()
         if str(i) == '<Player Sprite(in 1 groups)>':
             player_pos = i
+            
         else:
             enemy_pos = i
+    P1.switch_image()
+
+    # 두 이미지를 합쳐서 표시
+    combined_image = pygame.Surface((150, 150), pygame.SRCALPHA)
+    combined_image.blit(P1.thumbnail_image, (0, 0))
+    combined_image.blit(P1.user_base_image, (0, 0))
+
+    # 적 이미지를 화면에 표시
+    GameDisplay.blit(E1.image, E1.rect)
+
+    # 플레이어 이미지를 게임 화면에 표시
+    GameDisplay.blit(combined_image, P1.rect)
 
     # <Player Sprite(in 1 groups)>
     # 플레이어 충돌 판정(게임종료)시
@@ -168,12 +191,12 @@ while True:
         # 물체 이미지 변경(충돌후 변경되는 이미지)
         # 플레이어
         GameDisplay.blit(background, (0, 0))
-        image0 = pygame.image.load('image/user_Warning.png')
+        image0 = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\user_Warning.png')
         image0.get_rect()
         GameDisplay.blit(image0, player_pos)
 
         # 폭탄
-        image1 = pygame.image.load('image/bomb_Warning.png')
+        image1 = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\bomb_Warning.png')
         image1.get_rect()
         GameDisplay.blit(image1, enemy_pos)
         pygame.display.update()
@@ -181,16 +204,15 @@ while True:
         # 배경음악 멈춤
         bgm.stop()
         # 적과 충돌시 효과음 추가
-        pygame.mixer.Sound('Sound/boom.mp3').play()
+        pygame.mixer.Sound('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\Sound\\boom.mp3').play()
         time.sleep(0.5)
         
         # 게임오버화면 설정
-        pygame.mixer.Sound('Sound/boom.mp3').play()
+        pygame.mixer.Sound('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\Sound\\boom.mp3').play()
         GameDisplay.fill((255,255,255))
         final_scores = font.render("Your Score: " + str(SCORE), True, (0,0,0))
         GameDisplay.blit(final_scores, (100, 200))
         GameDisplay.blit(game_over, (100, 400))
-        GameDisplay.blit(ending_image, (200, 500))
  
         
         time.sleep(1)
@@ -199,28 +221,11 @@ while True:
         pygame.quit()
         sys.exit()
         
-# End the game if Plyer score more than 15 points
-
-    if SCORE > 15:
-        GameDisplay.fill((255, 255, 255))
-        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
-        special_image_rect = special_image.get_rect(center=(350, 400))
-
-        font_size = 50
-        font = pygame.font.Font(None, font_size)
-
-        final_A = font.render("Successfully", True, (0,0,0))
-        final_B = font.render("avoided", True, (0,0,0))
-        final_C = font.render("the bomb!!", True, (0,0,0))
-        GameDisplay.blit(final_A, (130, 200))
-        GameDisplay.blit(final_B, (130, 254))
-        GameDisplay.blit(final_C, (130, 308))
-
+# End the game if Plyer score more than 10 points
     if SCORE > 10:
         GameDisplay.fill((255, 255, 255))
-        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
+        special_image = pygame.image.load('C:\\Users\\namyj\\Downloads\\solgit-apple-pie-master\\solgit-apple-pie-master\\image\\user_Win.png') # 승리 배경 이미지 
         special_image_rect = special_image.get_rect(center=(300, 400))
-
         GameDisplay.blit(special_image, special_image_rect)
         pygame.display.update()
         time.sleep(5)
@@ -229,6 +234,4 @@ while True:
 
     pygame.display.update()
     # 초당 프레임 설정
-
     FramePerSec.tick(FPS)
-
