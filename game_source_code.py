@@ -2,6 +2,7 @@ import pygame, sys
 from pygame.locals import *
 import random, time
 
+
 pygame.init()
 # 초당 프레임 설정
 FPS = 60
@@ -11,6 +12,7 @@ FramePerSec = pygame.time.Clock()
 SPEED = 5  # 게임 진행 속도
 SCORE = 0  # 플레이어 점수
 level = 1 # 플레이어 레벨
+
 
 # 폰트 설정
 font = pygame.font.SysFont('Tahoma', 60)  # 기본 폰트 및 사이즈 설정(폰트1)
@@ -40,15 +42,24 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.inflate(-20,-20)
         print("Bomb : ", self.rect)
         # 이미지 시작 위치 설정
+
         self.rect.center = 40, 300
 
     # 적의 움직임 설정 함수 + 플레이어 점수 측정
     def move(self):
         global SCORE, SPEED, level
 
+        self.rect.center = (random.randint(40, 600), 0)
+
+    # 적의 움직임 설정 함수 + 플레이어 점수 측정
+    def move(self):
+        global SCORE
+
+
         # 적을 10픽셀크기만큼 위에서 아래로 떨어지도록 설정
         self.rect.move_ip(0, SPEED)  # x,y좌표 설정
         # 이미지가 화면 끝에 있으면(플레이어가 물체를 피하면) 다시 이미지 위치 세팅 + 1점 추가
+
         if self.rect.bottom + 50 > 800:
             SCORE += 1
             self.rect.top = 0
@@ -58,6 +69,11 @@ class Enemy(pygame.sprite.Sprite):
             if SCORE % 6 == 0:  # 예시로 10점 단위로 레벨이 올라가도록 설정
                 level += 0.5
                 SPEED += level  # 레벨에 따라 속도 증가
+
+        if self.rect.bottom + 50 > 750:
+            SCORE += 1
+            self.rect.top = 0
+            self.rect.center = (random.randint(30, 610), 0)
 
         return self.rect.center
 
@@ -183,7 +199,8 @@ while True:
         pygame.quit()
         sys.exit()
         
-# End the game if Plyer score more than 10 points
+# End the game if Plyer score more than 15 points
+
     if SCORE > 15:
         GameDisplay.fill((255, 255, 255))
         special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
@@ -198,6 +215,12 @@ while True:
         GameDisplay.blit(final_A, (130, 200))
         GameDisplay.blit(final_B, (130, 254))
         GameDisplay.blit(final_C, (130, 308))
+
+    if SCORE > 10:
+        GameDisplay.fill((255, 255, 255))
+        special_image = pygame.image.load('image/user_Win.png') # 승리 배경 이미지 
+        special_image_rect = special_image.get_rect(center=(300, 400))
+
         GameDisplay.blit(special_image, special_image_rect)
         pygame.display.update()
         time.sleep(5)
@@ -206,4 +229,6 @@ while True:
 
     pygame.display.update()
     # 초당 프레임 설정
+
     FramePerSec.tick(FPS)
+
