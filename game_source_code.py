@@ -262,7 +262,7 @@ while True:
 
     
 
-    if SCORE > 1:
+    if SCORE > 15:
         GameDisplay.fill((255, 255, 255))
         special_image = pygame.image.load('image/combined_user_Win.png') # 승리 배경 이미지 
         special_image_rect = special_image.get_rect(center=(350, 500))
