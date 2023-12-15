@@ -11,7 +11,7 @@
 ---
 ## *데모*
 - 무당이와 캐릭터의 충돌 시 화면
-[무당이와 캐릭터의 충돌 시 화면](Game colliding Screen.png)
+[무당이와 캐릭터의 충돌 시 화면](https://github.com/flying-adventure/solgit-apple-pie/blob/master/Game%20colliding%20Screen.png)
 ---
 ## *사용한 패키지*
 
